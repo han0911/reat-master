@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import C from "../src/Circle";
 import "./App.css";
 const Container = styled.div`
   width: 100vw;
@@ -15,7 +16,6 @@ const Button = styled.button`
   margin-top: 20px;
   padding: 10px 20px;
 `;
-
 type AppProps = {
   D: boolean;
   setD: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,6 +34,8 @@ function App({ D, setD }: AppProps) {
       <Button onClick={() => setD((prev) => !prev)}>
         {D ? "라이트 모드로" : "다크 모드로"}
       </Button>
+      <C bgcolor={"teal"} bordercolor="black" text="한석주"/>
+      <C bgcolor={"red"}/>
     </Container>
   );
 }
