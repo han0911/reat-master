@@ -1,15 +1,7 @@
-import { createRoot } from "react-dom/client";
-import { ThemeProvider } from "styled-components"; // 올바른 import
-import App from "./App.tsx";
-import { lightTheme } from "./components/theme.ts";
-import "./index.css";
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
 
-function Main() {
-  return (
-    <ThemeProvider theme={lightTheme}>
-      <App />
-    </ThemeProvider>
-  );
-}
-
-createRoot(document.getElementById("root")).render(<Main />);
+createRoot(document.getElementById('root')!).render(
+    <App />
+)
