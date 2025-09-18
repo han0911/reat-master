@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import { user } from "../db";
 function User() {
   const { userid } = useParams();
@@ -8,7 +8,12 @@ function User() {
         user {userid} {user[Number(userid) - 1].name}
       </h1>
       <hr></hr>
-      <Outlet/>
+      <Link to={"followers"}>see follwoers</Link>
+      <Outlet
+        context={{
+          myusername: user[Number(userid) - 1].name,
+        }}
+      />
     </>
   );
 }
