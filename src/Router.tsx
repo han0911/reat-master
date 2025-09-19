@@ -1,9 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
-const router = createBrowserRouter([
+import Coin from "./components/Coin";
+import Coins from "./components/Coins";
+const Router = createBrowserRouter([
   {
-    path: "/", // 주소
-    element: <App />, // 보여줄 컴포넌트
+    path: "/",
+    element: <Coins />,
+  },
+  {
+    path: "/detail/:coinid",
+    element: <Coin />,
   },
 ]);
-export default router;
+export default Router;
