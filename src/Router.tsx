@@ -1,6 +1,8 @@
+// src/router.tsx
 import { createBrowserRouter } from "react-router-dom";
 import Coin from "./components/Coin";
 import Coins from "./components/Coins";
+
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -11,4 +13,5 @@ const Router = createBrowserRouter([
     element: <Coin />,
   },
 ]);
+
 export default Router;
