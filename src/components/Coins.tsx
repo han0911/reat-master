@@ -23,9 +23,10 @@ const Coin = styled.li`
   margin-bottom: 10px;
   padding: 20px;
   a {
+    align-items: center;
+    display: flex;
     padding: 20px;
     transition: color 0.2s ease;
-    display: block;
   }
   &:hover {
     a {
@@ -49,11 +50,11 @@ interface Typecoin {
   type: string;
 }
 const Loader = styled.h1`
-    text-align: center;
-    font-size: 80px;
-`
+  text-align: center;
+  font-size: 80px;
+`;
 function Coins() {
-  const [loading, seTloading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [coins, seTcoins] = useState<Typecoin[]>([]);
   useEffect(() => {
     (async () => {
@@ -61,11 +62,16 @@ function Coins() {
       const josn = await respense.json();
       seTcoins(josn.slice(0, 100));
       setTimeout(() => {
-        seTloading(false);
-      },2000);
+        setLoading(false);
+      }, 2000);
     })();
   }, []);
-  console.log(ContentVisibilityAutoStateChangeEvent);
+  const Img = styled.img`
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+  `;
+
   return (
     <Container>
       <Header>
@@ -77,7 +83,15 @@ function Coins() {
         <Coinlist>
           {coins.map((coin) => (
             <Coin key={coin.id}>
-              <Link to={`/detail/${coin.id}`}>{coin.name} &rarr;</Link>
+              <Link to={`/detail/${coin.id}`} state={{ name: coin.name }}>
+                <Img
+                  src={`https://raw.githubusercontent.com/ErikThiart/cryptocurrency-icons/master/16/${coin.name
+                    .toLowerCase()
+                    .split(" ")
+                    .join("-")}.png`}
+                />
+                {coin.name} &rarr;
+              </Link>
             </Coin>
           ))}
         </Coinlist>
