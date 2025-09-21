@@ -1,7 +1,8 @@
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import router from "./router";
+import { theme } from "./theme"; // ⬅️ theme 가져오기
 
 const G = createGlobalStyle`
  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -31,7 +32,6 @@ footer, header, hgroup, main, menu, nav, section {
   display: block;
 }
 
-/* HTML5 hidden-attribute fix */
 *[hidden] {
   display: none;
 }
@@ -39,8 +39,8 @@ footer, header, hgroup, main, menu, nav, section {
 body {
   line-height: 1;
   font-family: 'Source Sans Pro', sans-serif;
-  background-color:${(props) => props.theme.background};
-  color: ${(props) => props.theme.textColor};  
+  background-color:${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.textColor};  
 }
 
 menu, ol, ul {
@@ -69,9 +69,10 @@ a {
   color: inherit;
 }
 `;
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <>
-    <G></G>
+  <ThemeProvider theme={theme}>
+    <G />
     <RouterProvider router={router} />
-  </>
+  </ThemeProvider>
 );
