@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Fetchcoin } from "../api";
+
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
@@ -40,6 +42,18 @@ const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
   font-weight: bold;
 `;
+
+const Loader = styled.h1`
+  text-align: center;
+  font-size: 80px;
+`;
+
+const Img = styled.img`
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+`;
+
 interface Typecoin {
   id: string;
   name: string;
@@ -49,39 +63,25 @@ interface Typecoin {
   is_active: boolean;
   type: string;
 }
-const Loader = styled.h1`
-  text-align: center;
-  font-size: 80px;
-`;
+
 function Coins() {
-  const [loading, setLoading] = useState(true);
-  const [coins, seTcoins] = useState<Typecoin[]>([]);
-  useEffect(() => {
-    (async () => {
-      const respense = await fetch("https://api.coinpaprika.com/v1/coins");
-      const josn = await respense.json();
-      seTcoins(josn.slice(0, 100));
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-    })();
-  }, []);
-  const Img = styled.img`
-    width: 35px;
-    height: 35px;
-    margin-right: 10px;
-  `;
+  // Corrected useQuery syntax for React Query v4 and newer.
+  // It now takes a single object with a `queryKey` and a `queryFn`.
+  const { isLoading, data } = useQuery<Typecoin[]>({
+    queryKey: ["allCoins"],
+    queryFn: Fetchcoin,
+  });
 
   return (
     <Container>
       <Header>
         <Title>코인</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>loading</Loader>
       ) : (
         <Coinlist>
-          {coins.map((coin) => (
+          {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
               <Link to={`/detail/${coin.id}`} state={{ name: coin.name }}>
                 <Img
@@ -99,4 +99,5 @@ function Coins() {
     </Container>
   );
 }
+
 export default Coins;

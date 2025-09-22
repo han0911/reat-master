@@ -9,7 +9,7 @@ const Router = createBrowserRouter([
     element: <Coins />,
   },
   {
-    path: "/detail/:coinid",
+    path: "/detail/:coinid/*",
     element: <Coin />,
   },
 ]);

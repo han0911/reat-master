@@ -1,6 +1,16 @@
-import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+  useParams,
+} from "react-router-dom";
 import styled from "styled-components";
+import { Fetchcoininfo, FetchcoinTicker } from "../api";
+import Chart from "./Chart";
+import Price from "./Price";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -25,70 +35,183 @@ const Header = styled.header`
   align-items: center;
 `;
 
-// useLocation의 state 타입을 정의합니다.
 interface LocationState {
   name: string;
 }
-interface Typeprice {
-  id:;
-  name:;
-  symbol:;
-  rank:;
-  is_new:;
-  is_active:;
-  type:;
-  logo:;
-  tags:;
-  team:;
-  description:;
-  message:;
-  olast_data_atpen_source:;
-  started_at:;
-  development_status:;
-  hardware_wallet:;
-  proof_type:;
-  org_structure:;
-  hash_algorithm:;
-  links:;
-  links_extended:;
-  whitepaper:;
-  first_data_at:;
+
+interface InfoData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  is_active: boolean;
+  type: string;
+  description: string;
+  message: string;
+  open_source: boolean;
+  started_at: string;
+  development_status: string;
+  hardware_wallet: boolean;
+  proof_type: string;
+  org_structure: string;
+  hash_algorithm: string;
+  first_data_at: string;
+  last_data_at: string;
 }
-interface Typeinfo {}
+
+interface PriceData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  beta_value: number;
+  first_data_at: string;
+  last_updated: string;
+  quotes: {
+    USD: {
+      price: number;
+      // ... (다른 속성들)
+    };
+  };
+}
+
+const Overview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+`;
+
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span:first-child {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+`;
+
+const Description = styled.p`
+  margin: 20px 0px;
+`;
+
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  a {
+    display: block;
+  }
+`;
+
 function Coin() {
+  const pricematch = useMatch(`/detail/:coinid/price`);
+  const chartmatch = useMatch(`/detail/:coinid/chart`);
+  console.log(pricematch);
   const { coinid } = useParams<{ coinid: string }>();
-  const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState({});
-  const [price, setPrice] = useState({});
-  useEffect(() => {
-    (async () => {
-      const infodata = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinid}`)
-      ).json();
-      console.log(infodata);
-      const pricedata = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinid}`)
-      ).json();
-      console.log(pricedata);
-      setInfo(infodata);
-      setPrice(pricedata);
-    })();
-  }, []);
+  const { state } = useLocation() as { state: LocationState | null };
+  //   const [loading, setLoading] = useState(true);
+  //   const [info, setInfo] = useState<InfoData>();
+  //   const [price, setPrice] = useState<PriceData>();
+  const priceMatch = useMatch("/detail/:coinid/price");
+  const chartMatch = useMatch("/detail/:coinid/chart");
+  const { isLoading: infoLoading, data: infodata } = useQuery({
+    queryKey: ["info", coinid],
+    queryFn: () => Fetchcoininfo(coinid),
+  });
+  const { isLoading: trickersLoading, data: trickersdata } = useQuery({
+    queryKey: ["ticker", coinid],
+    queryFn: () => FetchcoinTicker(coinid),
+  });
 
-  const { state } = useLocation();
-  const { name } = state as LocationState;
-
-  console.log(name);
-
+  //   useEffect(() => {
+  //     (async () => {
+  //       const infoData = await (
+  //         await fetch(`https://api.coinpaprika.com/v1/coins/${coinid}`)
+  //       ).json();
+  //       const priceData = await (
+  //         await fetch(`https://api.coinpaprika.com/v1/tickers/${coinid}`)
+  //       ).json();
+  //       setInfo(infoData);
+  //       setPrice(priceData);
+  //       setLoading(false);
+  //     })();
+  //   }, [coinid]);
+  const loading = infoLoading || trickersLoading
   return (
-    <div>
-      <Container>
-        <Header>
-          <Title>{name || "loading"}</Title>
-        </Header>
-        {loading ? <Loader>loading</Loader> : null}
-      </Container>
-    </div>
+    <Container>
+      <Header>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading..." : infodata?.name}
+        </Title>
+      </Header>
+      {loading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <>
+          <Overview>
+            <OverviewItem>
+              <span>Rank:</span>
+              <span>{infodata?.rank}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Symbol:</span>
+              <span>${infodata?.symbol}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Open Source:</span>
+              <span>{infodata?.open_source ? "Yes" : "No"}</span>
+            </OverviewItem>
+          </Overview>
+          <Description>{infodata?.description}</Description>
+          <Overview>
+            <OverviewItem>
+              <span>Total Suply:</span>
+              <span>{trickersdata?.total_supply}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Max Supply:</span>
+              <span>{trickersdata?.max_supply}</span>
+            </OverviewItem>
+          </Overview>
+
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/detail/${coinid}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/detail/${coinid}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
+
+          <Routes>
+            <Route path="price" element={<Price />} />
+            <Route path="chart" element={<Chart />} />
+          </Routes>
+        </>
+      )}
+    </Container>
   );
 }
 
