@@ -136,13 +136,13 @@ function Coin() {
   //   const [price, setPrice] = useState<PriceData>();
   const priceMatch = useMatch("/detail/:coinid/price");
   const chartMatch = useMatch("/detail/:coinid/chart");
-  const { isLoading: infoLoading, data: infodata } = useQuery({
+  const { isLoading: infoLoading, data: infodata } = useQuery<InfoData>({
     queryKey: ["info", coinid],
-    queryFn: () => Fetchcoininfo(coinid),
+    queryFn: () => Fetchcoininfo(coinid!),
   });
-  const { isLoading: trickersLoading, data: trickersdata } = useQuery({
+  const { isLoading: trickersLoading, data: trickersdata } = useQuery<PriceData>({
     queryKey: ["ticker", coinid],
-    queryFn: () => FetchcoinTicker(coinid),
+    queryFn: () => FetchcoinTicker(coinid!),
   });
 
   //   useEffect(() => {
@@ -207,7 +207,7 @@ function Coin() {
 
           <Routes>
             <Route path="price" element={<Price />} />
-            <Route path="chart" element={<Chart />} />
+            <Route path="chart" element={<Chart coinid = {coinid}/>} />
           </Routes>
         </>
       )}
