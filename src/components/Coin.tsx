@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -24,19 +24,67 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
 `;
-interface Typename {
+
+// useLocation의 state 타입을 정의합니다.
+interface LocationState {
   name: string;
 }
+interface Typeprice {
+  id:;
+  name:;
+  symbol:;
+  rank:;
+  is_new:;
+  is_active:;
+  type:;
+  logo:;
+  tags:;
+  team:;
+  description:;
+  message:;
+  olast_data_atpen_source:;
+  started_at:;
+  development_status:;
+  hardware_wallet:;
+  proof_type:;
+  org_structure:;
+  hash_algorithm:;
+  links:;
+  links_extended:;
+  whitepaper:;
+  first_data_at:;
+}
+interface Typeinfo {}
 function Coin() {
-  const { coinid } = useParams<{ coinid?: string }>();
+  const { coinid } = useParams<{ coinid: string }>();
   const [loading, setLoading] = useState(true);
-  const {name} = useLocation<Typename>()
-  console.log(location);
+  const [info, setInfo] = useState({});
+  const [price, setPrice] = useState({});
+  useEffect(() => {
+    (async () => {
+      const infodata = await (
+        await fetch(`https://api.coinpaprika.com/v1/coins/${coinid}`)
+      ).json();
+      console.log(infodata);
+      const pricedata = await (
+        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinid}`)
+      ).json();
+      console.log(pricedata);
+      setInfo(infodata);
+      setPrice(pricedata);
+    })();
+  }, []);
+
+  const { state } = useLocation();
+  const { name } = state as LocationState;
+
+  console.log(name);
+
   return (
     <div>
       <Container>
         <Header>
-          <Title>{coinid} 코인</Title>
+          <Title>{name || "loading"}</Title>
         </Header>
         {loading ? <Loader>loading</Loader> : null}
       </Container>
