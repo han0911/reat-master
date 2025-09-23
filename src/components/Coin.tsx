@@ -140,10 +140,11 @@ function Coin() {
     queryKey: ["info", coinid],
     queryFn: () => Fetchcoininfo(coinid!),
   });
-  const { isLoading: trickersLoading, data: trickersdata } = useQuery<PriceData>({
-    queryKey: ["ticker", coinid],
-    queryFn: () => FetchcoinTicker(coinid!),
-  });
+  const { isLoading: trickersLoading, data: trickersdata } =
+    useQuery<PriceData>({
+      queryKey: ["ticker", coinid],
+      queryFn: () => FetchcoinTicker(coinid!),
+    });
 
   //   useEffect(() => {
   //     (async () => {
@@ -158,7 +159,7 @@ function Coin() {
   //       setLoading(false);
   //     })();
   //   }, [coinid]);
-  const loading = infoLoading || trickersLoading
+  const loading = infoLoading || trickersLoading;
   return (
     <Container>
       <Header>
@@ -207,7 +208,7 @@ function Coin() {
 
           <Routes>
             <Route path="price" element={<Price />} />
-            <Route path="chart" element={<Chart coinid = {coinid}/>} />
+            <Route path="chart" element={<Chart coinid={coinid}  />} />
           </Routes>
         </>
       )}

@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import ApexCharts from "react-apexcharts"; // 'react-apexcharts'를 import합니다.
-import { useParams } from "react-router-dom";
-import { Fetchcoinhistory } from "../api";
+import ApexCharts from "react-apexcharts";
+import { fetchCoinHistory } from "../api";
 
-// API에서 받아올 데이터의 실제 형식에 맞게 인터페이스를 정의합니다.
 interface IHistoricalData {
   time_open: string;
   time_close: string;
@@ -15,17 +13,48 @@ interface IHistoricalData {
   market_cap: number;
 }
 
-function Chart() {
-  const { coinid } = useParams<{ coinid: string }>();
+interface ChartProps {
+  coinid?: string;
+}
 
-  // useQuery에 enabled 옵션을 추가하여 coinid가 존재할 때만 쿼리를 실행합니다.
+function Chart({ coinid }: ChartProps) {
   const { isLoading, data } = useQuery<IHistoricalData[]>({
     queryKey: ["ohlcv", coinid],
-    queryFn: () => Fetchcoinhistory(coinid!),
-    enabled: !!coinid, // coinid가 유효할 때만 쿼리를 활성화
+    queryFn: () => fetchCoinHistory(coinid!),
   });
 
-  return <div>{isLoading ? "로딩 중..." : <ApexCharts />}</div>;
+  if (isLoading) {
+    return <span>Loading chart...</span>;
+  }
+
+  if (!data || data.length === 0) {
+    return <span>No chart data available</span>;
+  }
+
+  // ApexCharts 컴포넌트에 필요한 options와 series 데이터가 없습니다.
+  // 이 부분은 데이터를 가공하여 추가해야 합니다.
+  const chartOptions = {
+    // 여기에 차트 설정을 추가합니다.
+    // 예: xaxis, yaxis, colors 등
+  };
+
+  const chartSeries = [
+    {
+      name: "Price",
+      data: data.map((d) => ({
+        x: new Date(d.time_close).getTime(),
+        y: [d.open, d.high, d.low, d.close],
+      })),
+    },
+  ];
+
+  return (
+    <ApexCharts
+      type="candlestick"
+      series={chartSeries}
+      options={chartOptions}
+    />
+  );
 }
 
 export default Chart;
