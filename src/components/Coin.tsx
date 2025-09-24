@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 import {
   Link,
   Route,
@@ -144,6 +145,7 @@ function Coin() {
     useQuery<PriceData>({
       queryKey: ["ticker", coinid],
       queryFn: () => FetchcoinTicker(coinid!),
+      refetchInterval: 5000,
     });
 
   //   useEffect(() => {
@@ -162,6 +164,11 @@ function Coin() {
   const loading = infoLoading || trickersLoading;
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infodata?.name}
+        </title>
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infodata?.name}
@@ -181,8 +188,10 @@ function Coin() {
               <span>${infodata?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infodata?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>
+                {trickersdata?.quotes.USD.price.toFixed(2) ? "Yes" : "No"}
+              </span>
             </OverviewItem>
           </Overview>
           <Description>{infodata?.description}</Description>
@@ -207,8 +216,8 @@ function Coin() {
           </Tabs>
 
           <Routes>
-            <Route path="price" element={<Price />} />
-            <Route path="chart" element={<Chart coinid={coinid}  />} />
+            <Route path="price" element={<Price coinid={coinid} />} />
+            <Route path="chart" element={<Chart coinid={coinid} />} />
           </Routes>
         </>
       )}

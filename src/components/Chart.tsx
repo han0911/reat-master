@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import ApexCharts from "react-apexcharts";
+import type { ApexOptions } from "apexcharts";
+import ReactApexChart from "react-apexcharts";
 import { fetchCoinHistory } from "../api";
 
 interface IHistoricalData {
@@ -23,38 +24,62 @@ function Chart({ coinid }: ChartProps) {
     queryFn: () => fetchCoinHistory(coinid!),
   });
 
-  if (isLoading) {
-    return <span>Loading chart...</span>;
-  }
+  if (isLoading) return <span>Loading chart...</span>;
+  if (!data || data.length === 0) return <span>No chart data available</span>;
 
-  if (!data || data.length === 0) {
-    return <span>No chart data available</span>;
-  }
-
-  // ApexCharts 컴포넌트에 필요한 options와 series 데이터가 없습니다.
-  // 이 부분은 데이터를 가공하여 추가해야 합니다.
-  const chartOptions = {
-    stroke: {
-      curve: "",
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: "candlestick",
+      height: 350,
+      background: "transparent",
+      toolbar: { show: false },
+    },
+    xaxis: {
+      type: "datetime", // ✅ 데이터의 x 값이 timestamp니까 datetime으로 둬야 함
+    },
+    yaxis: {
+      tooltip: { enabled: true },
+      labels: {
+        formatter: (val: number) => val.toFixed(2), // ✅ 항상 소수점 둘째자리
+      },
+    },
+    tooltip: {
+      theme: "dark", // ✅ 툴팁 배경 흰색 → 다크 스타일
+      y: {
+        formatter: (val: number | string) =>
+          typeof val === "number" ? val.toFixed(2) : String(val),
+      },
+    },
+    plotOptions: {
+      candlestick: {
+        colors: {
+          upward: "#26a69a",
+          downward: "#ef5350",
+        },
+      },
     },
   };
-  const chartSeries = [
+
+  const chartSeries: ApexOptions["series"] = [
     {
       name: "Price",
       data: data.map((d) => ({
-        x: new Date(d.time_close).getTime(),
-        y: [d.open, d.high, d.low, d.close],
+        x: new Date(d.time_close).getTime(), // ✅ timestamp
+        y: [d.open, d.high, d.low, d.close], // ✅ OHLC
       })),
     },
   ];
 
   return (
-    <ApexCharts
-      type="candlestick"
-      series={chartSeries}
+    <ReactApexChart
       options={chartOptions}
+      series={chartSeries}
+      type="candlestick"
+      height={350}
     />
   );
 }
 
 export default Chart;
+
+

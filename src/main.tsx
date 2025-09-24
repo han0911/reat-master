@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import { ThemeProvider, createGlobalStyle } from "styled-components";
-import router from "./router";
-import { theme } from "./theme"; // ⬅️ theme 가져오기
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
+import ReactDOM from "react-dom/client";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
+import App from "./App";
+import { darktheme, lightTheme } from "./theme";
 
 const G = createGlobalStyle`
  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -74,12 +74,19 @@ a {
 
 const query = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={query}>
-    <ThemeProvider theme={theme}>
-      <G />
-      <RouterProvider router={router} />
-      <ReactQueryDevtools initialIsOpen={true} />
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+// 테마 상태를 관리하는 래퍼 컴포넌트
+function Main() {
+  const [dark, setDark] = useState(true);
+
+  return (
+    <QueryClientProvider client={query}>
+      <ThemeProvider theme={dark ? darktheme : lightTheme}>
+        <G />
+        <App setDark={setDark} dark={dark} />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")!).render(<Main />);
