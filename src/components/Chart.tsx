@@ -34,10 +34,10 @@ function Chart({ coinid }: ChartProps) {
   // ApexCharts 컴포넌트에 필요한 options와 series 데이터가 없습니다.
   // 이 부분은 데이터를 가공하여 추가해야 합니다.
   const chartOptions = {
-    // 여기에 차트 설정을 추가합니다.
-    // 예: xaxis, yaxis, colors 등
+    stroke: {
+      curve: "",
+    },
   };
-
   const chartSeries = [
     {
       name: "Price",
