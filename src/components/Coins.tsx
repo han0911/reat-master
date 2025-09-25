@@ -76,6 +76,7 @@ function Coins() {
     <Container>
       <Header>
         <Title>코인</Title>
+        <button>다크모드</button>
       </Header>
       {isLoading ? (
         <Loader>loading</Loader>

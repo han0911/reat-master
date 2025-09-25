@@ -125,8 +125,11 @@ const Tab = styled.span<{ isActive: boolean }>`
     display: block;
   }
 `;
-
-function Coin() {
+interface Typetheme{
+    dark:boolean,
+    setDark:React.Dispatch<React.SetStateAction<boolean>>
+}
+function Coin({dark,setDark}:Typetheme) {
   const pricematch = useMatch(`/detail/:coinid/price`);
   const chartmatch = useMatch(`/detail/:coinid/chart`);
   console.log(pricematch);
@@ -217,7 +220,7 @@ function Coin() {
 
           <Routes>
             <Route path="price" element={<Price coinid={coinid} />} />
-            <Route path="chart" element={<Chart coinid={coinid} />} />
+            <Route path="chart" element={<Chart coinid={coinid} dark={dark} setDark={setDark} />} />
           </Routes>
         </>
       )}

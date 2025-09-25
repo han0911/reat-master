@@ -4,8 +4,8 @@ import { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import App from "./App";
+import Coin from "./components/Coin";
 import { darktheme, lightTheme } from "./theme";
-
 const G = createGlobalStyle`
  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
 
@@ -84,6 +84,7 @@ function Main() {
         <G />
         <App setDark={setDark} dark={dark} />
         <ReactQueryDevtools initialIsOpen={true} />
+        <Coin dark = {dark} setDark = {setDark} />
       </ThemeProvider>
     </QueryClientProvider>
   );

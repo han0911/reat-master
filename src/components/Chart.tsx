@@ -16,18 +16,25 @@ interface IHistoricalData {
 
 interface ChartProps {
   coinid?: string;
+  dark: boolean;
+  setDark: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Chart({ coinid }: ChartProps) {
+function Chart({ coinid, dark, setDark }: ChartProps) {
   const { isLoading, data } = useQuery<IHistoricalData[]>({
     queryKey: ["ohlcv", coinid],
     queryFn: () => fetchCoinHistory(coinid!),
+    enabled: !!coinid,
   });
 
+  if (!coinid) return <span>No coin selected</span>;
   if (isLoading) return <span>Loading chart...</span>;
   if (!data || data.length === 0) return <span>No chart data available</span>;
 
   const chartOptions: ApexOptions = {
+    theme: {
+      mode: "dark",
+    },
     chart: {
       type: "candlestick",
       height: 350,
@@ -81,5 +88,3 @@ function Chart({ coinid }: ChartProps) {
 }
 
 export default Chart;
-
-
