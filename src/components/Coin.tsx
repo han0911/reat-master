@@ -8,10 +8,12 @@ import {
   useMatch,
   useParams,
 } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Fetchcoininfo, FetchcoinTicker } from "../api";
 import Chart from "./Chart";
 import Price from "./Price";
+import { Dark } from "./atoms";
 
 const Title = styled.h1`
   font-size: 48px;

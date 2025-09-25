@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Fetchcoin } from "../api";
+import { Dark } from "./atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -65,18 +67,20 @@ interface Typecoin {
 }
 
 function Coins() {
+  const setFn = useSetRecoilState(Dark);
   // Corrected useQuery syntax for React Query v4 and newer.
   // It now takes a single object with a `queryKey` and a `queryFn`.
   const { isLoading, data } = useQuery<Typecoin[]>({
     queryKey: ["allCoins"],
     queryFn: Fetchcoin,
   });
+  const dark = useRecoilValue(Dark);
 
   return (
     <Container>
       <Header>
         <Title>코인</Title>
-        <button>다크모드</button>
+        <button onClick={(prev)=>setFn(!prev)}>다크모드</button>
       </Header>
       {isLoading ? (
         <Loader>loading</Loader>

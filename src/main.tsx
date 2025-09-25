@@ -1,8 +1,15 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ReactDOM from "react-dom/client";
-import { RecoilRoot } from "recoil";
-import { createGlobalStyle } from "styled-components";
+import { RecoilRoot, useRecoilValue } from "recoil";
+import {
+  type DefaultTheme,
+  ThemeProvider,
+  createGlobalStyle,
+} from "styled-components";
+import App from "./App";
+import { Dark } from "./components/atoms";
+
 const G = createGlobalStyle`
  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
 
@@ -68,16 +75,38 @@ a {
   color: inherit;
 }
 `;
+export const darktheme: DefaultTheme = {
+  textColor: "#f5f6fa",
+  background: "#2f3640",
+  accentColor: "#4cd137",
+};
+
+export const lightTheme: DefaultTheme = {
+  textColor: "#2f3640",
+  background: "#f5f6fa",
+  accentColor: "#4cd137",
+};
 
 const query = new QueryClient();
 
-// 테마 상태를 관리하는 래퍼 컴포넌트
+// ✅ Recoil 상태를 사용하고 테마를 적용하는 새로운 컴포넌트
+function AppWithTheme() {
+  const dark = useRecoilValue(Dark); // RecoilRoot 안쪽에 있으므로 정상적으로 동작합니다.
+  return (
+    <ThemeProvider theme={dark ? darktheme : lightTheme}>
+      <G />
+      <App />
+      <ReactQueryDevtools initialIsOpen={true} />
+    </ThemeProvider>
+  );
+}
+
+// ✅ 최상위 컴포넌트는 Provider들만 설정하는 역할을 합니다.
 function Main() {
   return (
     <RecoilRoot>
       <QueryClientProvider client={query}>
-          <ReactQueryDevtools initialIsOpen={true}>
-          </ReactQueryDevtools>
+        <AppWithTheme />
       </QueryClientProvider>
     </RecoilRoot>
   );
