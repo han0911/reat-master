@@ -1,11 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { ThemeProvider, createGlobalStyle } from "styled-components";
-import App from "./App";
-import Coin from "./components/Coin";
-import { darktheme, lightTheme } from "./theme";
+import { RecoilRoot } from "recoil";
+import { createGlobalStyle } from "styled-components";
 const G = createGlobalStyle`
  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
 
@@ -76,17 +73,13 @@ const query = new QueryClient();
 
 // 테마 상태를 관리하는 래퍼 컴포넌트
 function Main() {
-  const [dark, setDark] = useState(true);
-
   return (
-    <QueryClientProvider client={query}>
-      <ThemeProvider theme={dark ? darktheme : lightTheme}>
-        <G />
-        <App setDark={setDark} dark={dark} />
-        <ReactQueryDevtools initialIsOpen={true} />
-        <Coin dark = {dark} setDark = {setDark} />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <RecoilRoot>
+      <QueryClientProvider client={query}>
+          <ReactQueryDevtools initialIsOpen={true}>
+          </ReactQueryDevtools>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 }
 

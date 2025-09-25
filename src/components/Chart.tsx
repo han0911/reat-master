@@ -16,11 +16,9 @@ interface IHistoricalData {
 
 interface ChartProps {
   coinid?: string;
-  dark: boolean;
-  setDark: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Chart({ coinid, dark, setDark }: ChartProps) {
+function Chart({ coinid }: ChartProps) {
   const { isLoading, data } = useQuery<IHistoricalData[]>({
     queryKey: ["ohlcv", coinid],
     queryFn: () => fetchCoinHistory(coinid!),

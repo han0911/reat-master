@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Coin from "./components/Coin";
 import Coins from "./components/Coins";
 
-const Router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Coins />,
@@ -14,4 +14,4 @@ const Router = createBrowserRouter([
   },
 ]);
 
-export default Router;
+export default router;
