@@ -1,16 +1,10 @@
 // src/router.tsx
 import { createBrowserRouter } from "react-router-dom";
-import Coin from "./components/Coin";
-import Coins from "./components/Coins";
-
+import DragDrop from "./components/DragDrop";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Coins />,
-  },
-  {
-    path: "/detail/:coinid/*",
-    element: <Coin />,
+    element: <DragDrop />,
   },
 ]);
 
