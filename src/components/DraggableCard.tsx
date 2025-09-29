@@ -3,31 +3,37 @@ import { Draggable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { todoState } from "../atoms";
-const Card = styled.div`
+import type { Itodo } from "../atoms";
+interface TypeC{
+    isDragging:boolean
+}
+const Card = styled.div<TypeC>`
   border-radius: 5px;
   min-height: 30px;
   display: flex;
   align-items: center;
   padding-left: 10px;
-  background-color: blue;
+  background-color: ${(props) => props.isDragging?"gray":"transparent"};
   flex-grow: 1;
 `;
 interface Typemap {
-  todo: string;
+  toDoid: number;
+  toDotext:string
   index: number;
 }
-function DraaggableCard({ todo, index }: Typemap) {
+function DraaggableCard({ toDoid, index,toDotext }: Typemap) {
   const [todos, setTodos] = useRecoilState(todoState);
 
   return (
-    <Draggable draggableId={todo} index={index} key={todo}>
-      {(magic) => (
+    <Draggable draggableId={toDoid+""} index={index} key={toDoid}>
+      {(magic, snapshot) => (
         <Card
           ref={magic.innerRef}
+          isDragging={snapshot.isDragging}
           {...magic.dragHandleProps}
           {...magic.draggableProps}
         >
-          {todo}
+          {toDotext}
         </Card>
       )}
     </Draggable>
