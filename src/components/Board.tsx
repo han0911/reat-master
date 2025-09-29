@@ -57,7 +57,7 @@ function Boardcard({ todos, boardid }: TypeBoard) {
     console.log(todo);
     const Newthing = {
       id: Date.now(),
-      text:todo,
+      text: todo,
     };
     setValue("newtodo", "");
   };

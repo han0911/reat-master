@@ -3,9 +3,9 @@ export const minuteState = atom({
   key: "minutes",
   default: 0,
 });
-export interface Itodo{
-    id:number,
-    text:string
+export interface Itodo {
+  id: number;
+  text: string;
 }
 
 export const hourSelector = selector<number>({
@@ -25,8 +25,9 @@ interface Typetodo {
 export const todoState = atom<Typetodo>({
   key: "todo",
   default: {
-    todo: [{id:0,text:"hello"},{id:1,text:"hello1"}],
+    todo: [],
     doing: [],
     done: [],
+    trash:[]
   },
 });

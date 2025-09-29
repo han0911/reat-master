@@ -3,9 +3,8 @@ import { Draggable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { todoState } from "../atoms";
-import type { Itodo } from "../atoms";
-interface TypeC{
-    isDragging:boolean
+interface TypeC {
+  isDragging: boolean;
 }
 const Card = styled.div<TypeC>`
   border-radius: 5px;
@@ -13,19 +12,19 @@ const Card = styled.div<TypeC>`
   display: flex;
   align-items: center;
   padding-left: 10px;
-  background-color: ${(props) => props.isDragging?"gray":"transparent"};
+  background-color: ${(props) => (props.isDragging ? "gray" : "transparent")};
   flex-grow: 1;
 `;
 interface Typemap {
   toDoid: number;
-  toDotext:string
+  toDotext: string;
   index: number;
 }
-function DraaggableCard({ toDoid, index,toDotext }: Typemap) {
+function DraaggableCard({ toDoid, index, toDotext }: Typemap) {
   const [todos, setTodos] = useRecoilState(todoState);
 
   return (
-    <Draggable draggableId={toDoid+""} index={index} key={toDoid}>
+    <Draggable draggableId={toDoid + ""} index={index} key={toDoid}>
       {(magic, snapshot) => (
         <Card
           ref={magic.innerRef}
