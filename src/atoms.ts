@@ -14,3 +14,14 @@ export const hourSelector = selector<number>({
     set(minuteState, minutes);
   },
 });
+interface Typetodo {
+  [key: string]: string[];
+}
+export const todoState = atom<Typetodo>({
+  key: "todo",
+  default: {
+    todo: ["a", "b"],
+    doing: ["c", "d", "e"],
+    done: ["f"],
+  },
+});
