@@ -9,7 +9,8 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const Box = styled(motion.div)`
+// Box, Circle만 수정
+const Box = styled(motion.div)<any>`
   width: 200px;
   height: 200px;
   display: grid;
@@ -19,15 +20,14 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const Circle = styled(motion.div)`
+const Circle = styled(motion.div)<any>`
   background-color: white;
   height: 70px;
   width: 70px;
   place-self: center;
   border-radius: 35px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0.06);
 `;
-
 const boxVariants = {
   start: {
     opacity: 0,
@@ -56,7 +56,6 @@ const circleVariants = {
     y: 0,
   },
 };
-
 function Ani() {
   return (
     <Wrapper>
