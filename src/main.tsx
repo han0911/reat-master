@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
-import DragDrop from "./components/DragDrop";
+import App from "./App";
 import { darktheme } from "./theme";
 const query = new QueryClient();
 
@@ -11,7 +11,7 @@ function Main() {
     <RecoilRoot>
       <ThemeProvider theme={darktheme}>
         <QueryClientProvider client={query}>
-          <DragDrop />
+            <App></App>
         </QueryClientProvider>
       </ThemeProvider>
     </RecoilRoot>

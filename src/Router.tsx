@@ -1,10 +1,10 @@
 // src/router.tsx
 import { createBrowserRouter } from "react-router-dom";
-import DragDrop from "./components/DragDrop";
+import Ani from "./components/ani";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DragDrop />,
+    element: <Ani />,
   },
 ]);
 
